@@ -1,12 +1,7 @@
-import Link from 'next/link';
-
-const sell = props => {
-    return <div>
-        <Link href="/">
-            <a>Home</a>
-        </Link>
+const sell = props => (
+    <div>
         <p>Sell Page</p>
     </div>
-}
+)
 
 export default sell;

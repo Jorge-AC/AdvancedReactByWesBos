@@ -1,0 +1,15 @@
+import Nav from './Nav';
+
+const Header = () => (
+    <div>
+        <div className="bar">
+            <a href="/">Sick Fits</a>
+            <Nav />
+        </div>
+        <div className="sub-bar"><p>Search bar</p></div>
+        <div><p>Cart</p></div>
+    </div>
+)
+
+
+export default Header;
