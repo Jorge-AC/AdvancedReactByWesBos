@@ -38,7 +38,7 @@ class Item extends Component {
               query: { id: item.id },
             }}
           >
-            <a>Edit ✏️</a>
+            <a>Edit</a>
           </Link>
           <button>Add To Cart</button>
           <button>Delete </button>
