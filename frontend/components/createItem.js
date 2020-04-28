@@ -27,11 +27,11 @@ const CREATE_ITEM_MUTATION = gql`
 `;
 class createItem extends Component {
   state = {
-    title: "Product title",
-    description: "Product description",
+    title: "",
+    description: "",
     price: 0,
-    image: "product.png",
-    largeImage: "largeProduct.png"
+    image: "",
+    largeImage: ""
   }
   
   handleChange = (e) => {
@@ -40,6 +40,24 @@ class createItem extends Component {
     const val = type === "number" ? parseFloat(value): value;
 
     this.setState({[name]: val});
+  }
+
+  handleUpload = async (e) => {
+    const formData = new FormData();
+    formData.append('upload_preset', 'drawingsstore');
+    formData.append('file', e.target.files[0])
+
+    const res = await fetch('https://api.cloudinary.com/v1_1/jardilaqarbono/image/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    const file = await res.json();
+
+    this.setState({
+      image: file.secure_url,
+      largeImage: file.eager[0].secure_url
+    })
   }
 
   render() {
@@ -62,51 +80,54 @@ class createItem extends Component {
             }}>
               <Error error={error}></Error>
               <fieldset disabled={loading} aria-busy={loading}>
-                Title
-                <input 
-                  type="text"
-                  name="title"
-                  id="title"
-                  value={this.state.title} 
-                  required 
-                  onChange={this.handleChange}
-                />
-                Description
-                <textarea 
-                  type="text" 
-                  name="description"
-                  id="description"
-                  value={this.state.description} 
-                  required 
-                  onChange={this.handleChange}
-                />
-                Price
-                <input 
-                  type="number" 
-                  name="price"
-                  id="price"
-                  value={this.state.price} 
-                  required 
-                  onChange={this.handleChange}
-                />
-                Image
-                <input 
-                  type="text" 
-                  name="image"
-                  id="image"
-                  value={this.state.image} 
-                  required 
-                  onChange={this.handleChange}
-                />
-                Large Image
-                <input 
-                  type="text" 
-                  name="largeImage"
-                  id="largeImage"
-                  value={this.state.largeImage} 
-                  required 
-                  onChange={this.handleChange}
-                />
+                <label htmlFor="title">
+                  Title
+                  <input 
+                    type="text"
+                    name="title"
+                    id="title"
+                    placeholder="Product Name"
+                    value={this.state.title} 
+                    required 
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <label htmlFor="description">
+                  Description
+                  <textarea 
+                    type="text" 
+                    name="description"
+                    id="description"
+                    placeholder="Enter the product description"
+                    value={this.state.description} 
+                    required 
+                    onChange={this.handleChange}
+                    />
+                </label>
+                <label htmlFor="price">
+                  Price
+                  <input 
+                    type="number" 
+                    name="price"
+                    id="price"
+                    placeholder="Product Price"
+                    value={this.state.price} 
+                    required 
+                    onChange={this.handleChange}
+                  />
+                </label>
+                <label htmlFor="image">
+                  Image
+                  <input 
+                    type="file" 
+                    name="image"
+                    id="image"
+                    required 
+                    onChange={this.handleUpload}
+                  />
+
+                  { this.state.image && <img src={this.state.image} alt="Uploaded Image" width="200px"></img>}
+                </label>
                 <button type="submit">Send</button>
               </fieldset>
             </Form>
