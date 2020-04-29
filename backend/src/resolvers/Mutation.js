@@ -34,6 +34,16 @@ const mutations = {
     }, info);
 
     return item
+  },
+
+  async deleteItem(parent, args, ctx, info){
+    const whereId = {where: {id: args.id}};
+    const item = await ctx.db.query.item(whereId, `{id, title}`);
+    //TODO check user's ownership or permissions to delete item
+
+    const deleted = await ctx.db.mutation.deleteItem(whereId, info);
+
+    return deleted;
   }
 };
 
