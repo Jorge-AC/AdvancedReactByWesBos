@@ -10,7 +10,8 @@ const Query = {
 */
 //OR. Both works the same
   items: forwardTo('db'),
-  item: forwardTo('db')
+  item: forwardTo('db'),
+  itemsConnection: forwardTo('db')
 };
 
 module.exports = Query;
