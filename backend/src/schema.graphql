@@ -5,10 +5,12 @@ type Mutation {
  updateItem(title: String, description: String, price: Int, id: ID!) : Item
  deleteItem(id: ID!): Item
  signUp(name: String!, password: String!, email: String!): User
+ signIn(email: String!, password: String!): User
 }
 
 type Query {
   items(where: ItemWhereUniqueInput, orderBy: ItemOrderByInput, skip: Int, first: Int): [Item]!
   item(where: ItemWhereUniqueInput!): Item
   itemsConnection: ItemConnection!
+  me: User
 }
