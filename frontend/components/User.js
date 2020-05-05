@@ -3,7 +3,7 @@ import { Query } from 'react-apollo';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 
-const SIGNEDIN_USER_MUTATION = gql`
+const SIGNEDIN_USER_QUERY = gql`
   query {
     me {
       name
@@ -16,7 +16,7 @@ const SIGNEDIN_USER_MUTATION = gql`
 class User extends Component{
   render() {
     return (
-      <Query query={SIGNEDIN_USER_MUTATION}>
+      <Query query={SIGNEDIN_USER_QUERY}>
         { ({data: { me }}) => (
           this.props.children(me)
         )}
@@ -30,4 +30,4 @@ User.propTypes = {
 }
 
 export default User;
-export { SIGNEDIN_USER_MUTATION };
+export { SIGNEDIN_USER_QUERY };

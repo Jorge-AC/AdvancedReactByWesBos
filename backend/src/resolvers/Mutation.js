@@ -91,6 +91,12 @@ const mutations = {
     });
 
     return user
+  },
+
+  async signOut(parent, args, ctx, info) {
+    ctx.response.clearCookie('token');
+
+    return null;
   }
 };
 

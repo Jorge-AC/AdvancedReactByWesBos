@@ -6,6 +6,7 @@ type Mutation {
  deleteItem(id: ID!): Item
  signUp(name: String!, password: String!, email: String!): User
  signIn(email: String!, password: String!): User
+ signOut: User
 }
 
 type Query {
