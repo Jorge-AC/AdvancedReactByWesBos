@@ -41,11 +41,11 @@ class SignIn extends Component{
             <Error error={error}></Error>
             <label htmlFor="signInEmail">
               Email
-              <input type="email" id="signInEmail" name="email" placeholder="Insert your email" onChange={this.updateState}/>
+              <input type="email" id="signInEmail" name="email" placeholder="Insert your email" value={this.state.email} onChange={this.updateState}/>
             </label>
             <label htmlFor="signInPassword">
               Password
-              <input type="password" id="signInPassword" name="password" placeholder="Insert your password" onChange={this.updateState}/>
+              <input type="password" id="signInPassword" name="password" placeholder="Insert your password" value={this.state.password} onChange={this.updateState}/>
             </label>
             <button type="submit">Sign In</button>
           </fieldset>        
