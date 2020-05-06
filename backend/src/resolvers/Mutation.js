@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { promisify } = require('util');
+const { transport, mailTemplate } = require('../sendEmail');
 
 const mutations = {
   /*
@@ -123,6 +124,15 @@ const mutations = {
       where: {
         email: args.email
       }
+    })
+
+    //send email to user
+
+    const mail = await transport.sendMail({
+      from: '"George" <jardila@qarbono.com>', // sender address
+      to: "bar@example.com, baz@example.com", // list of receivers
+      subject: "Reset your password ✔", // Subject line
+      html: mailTemplate(resetToken) // html body
     })
 
     return { message: 'Successfully created the resetToken' };
