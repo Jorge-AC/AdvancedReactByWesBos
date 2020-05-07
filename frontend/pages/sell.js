@@ -1,9 +1,12 @@
 import CreateItem from '../components/createItem';
+import CheckLogStatus from '../components/checkLogStatus';
 
 const sell = () => {
   return (
     <div>
-      <CreateItem />
+      <CheckLogStatus>
+        <CreateItem />
+      </CheckLogStatus>
     </div>
   )
 }
