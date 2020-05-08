@@ -7,5 +7,6 @@
   },
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
-  }
+  },
+  "editor.definitionLinkOpensInPeek": true
 }
