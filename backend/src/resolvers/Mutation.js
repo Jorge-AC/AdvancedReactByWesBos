@@ -51,13 +51,18 @@ const mutations = {
   },
 
   async deleteItem(parent, args, ctx, info) {
+    if (!ctx.request.userId) throw new Error('You must be logged in to perform this action');
+
     const whereId = { where: { id: args.id } };
-    const item = await ctx.db.query.item(whereId, `{id, title}`);
-    //TODO check user's ownership or permissions to delete item
+    const item = await ctx.db.query.item(whereId, `{id, title, user{id}}`);
+    const isOwner = item.user.id === ctx.request.userId;
+    const hasPermissions = ['ITEMDELETE', 'ADMIN'].some(permission => { return ctx.request.user.permissions.includes(permission) });
 
-    const deleted = await ctx.db.mutation.deleteItem(whereId, info);
-
-    return deleted;
+    if (isOwner || hasPermissions) {
+      return ctx.db.mutation.deleteItem(whereId, info);
+    } else {
+      throw new Error("You don't have enough permissions to do this")
+    }
   },
 
   async signUp(parent, args, ctx, info) {

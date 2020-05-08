@@ -15,26 +15,33 @@ class DeleteItem extends Component {
   handleClick = async (e, deleteItem) => {
     const confirm = await window.confirm('Are you sure you want to delete this item?');
 
-    if(confirm) {
+    if (confirm) {
       const deleted = await deleteItem();
     }
   }
 
-  onUpdate(cache, payload){
+  onUpdate(cache, payload) {
     //1.get initial cached query
-    const data = cache.readQuery({query: ALL_ITEMS_QUERY});
+    const data = cache.readQuery({ query: ALL_ITEMS_QUERY });
     //2. Remove the deleted item
-    data.items = data.items.filter(item => item.id !== payload.data.deleteItem.id );
+    data.items = data.items.filter(item => item.id !== payload.data.deleteItem.id);
     //3. update the cache data
-    cache.writeQuery({query: ALL_ITEMS_QUERY, data });
+    cache.writeQuery({ query: ALL_ITEMS_QUERY, data });
   }
 
   render() {
     return (
-      <Mutation mutation={DELETE_ITEM_MUTATION} variables={{id: this.props.id}} update={this.onUpdate}>
-        {(deleteItem) => {
-          return <button onClick={(e) => { this.handleClick(e, deleteItem)}}>{this.props.children}</button>
-        }}
+      <Mutation mutation={ DELETE_ITEM_MUTATION } variables={ { id: this.props.id } } update={ this.onUpdate }>
+        { (deleteItem, { error, loading }) => (
+          <button
+            onClick={ (e) => { this.handleClick(e, deleteItem) } }
+            disabled={ loading }>
+            <>
+              { error && alert(error.message) }
+              { this.props.children }
+            </>
+          </button>
+        ) }
       </Mutation>
     )
   }
