@@ -1,36 +1,43 @@
 import Link from 'next/link';
+import { Mutation } from 'react-apollo';
 import NavStyles from './styles/NavStyles';
 import User from './User';
 import SignOut from './SignOut';
+import { CART_STATE_TOGGLE } from './Cart';
 
 const Nav = () => (
   <User>
-    {(user) => {
+    { (user) => {
       return <NavStyles>
         <Link href="/items">
           <a>Shop</a>
         </Link>
         { user && <>
-            <Link href="/sell">
-              <a>Sell</a>
-            </Link>
-            <Link href="/orders">
-              <a>Orders</a>
-            </Link>
-            <Link href="/account">
-              <a>My Account</a>
-            </Link>
-            <SignOut>Sign Out</SignOut>
-          </>
+          <Link href="/sell">
+            <a>Sell</a>
+          </Link>
+          <Link href="/orders">
+            <a>Orders</a>
+          </Link>
+          <Link href="/account">
+            <a>My Account</a>
+          </Link>
+          <SignOut>Sign Out</SignOut>
+          <Mutation mutation={ CART_STATE_TOGGLE }>
+            { (toogleCart) => (
+              <button onClick={ toogleCart }>My Cart</button>
+            ) }
+          </Mutation>
+        </>
         }
         { !user && <>
-            <Link href="/signup">
-              <a>Sign In</a>
-            </Link>
-          </>
+          <Link href="/signup">
+            <a>Sign In</a>
+          </Link>
+        </>
         }
       </NavStyles>
-    }}
+    } }
   </User>
 )
 

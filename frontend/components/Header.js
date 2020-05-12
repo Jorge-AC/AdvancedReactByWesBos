@@ -29,7 +29,7 @@ const Logo = styled.h1`
     text-decoration: none;
   }
   @media (max-width: 1300px) {
-    margin: 0;
+    margin: 0 5%;
     text-align: center;
   }
 `;

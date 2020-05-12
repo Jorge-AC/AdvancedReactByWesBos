@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 
 const SIGNEDIN_USER_QUERY = gql`
-  query {
+  query SIGNEDIN_USER_QUERY{
     me {
       name
       email
@@ -13,13 +13,13 @@ const SIGNEDIN_USER_QUERY = gql`
   }
 `;
 
-class User extends Component{
+class User extends Component {
   render() {
     return (
-      <Query query={SIGNEDIN_USER_QUERY}>
-        { ({data: { me }}) => (
+      <Query query={ SIGNEDIN_USER_QUERY }>
+        { ({ data: { me } }) => (
           this.props.children(me)
-        )}
+        ) }
       </Query>
     )
   }

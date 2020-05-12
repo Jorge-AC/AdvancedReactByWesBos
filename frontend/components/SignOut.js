@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 import { SIGNEDIN_USER_QUERY } from './User';
 
 const SIGNOUT_MUTATION = gql`
-  mutation {
+  mutation SIGNOUT_MUTATION{
     signOut {
       name
     }
@@ -12,13 +12,13 @@ const SIGNOUT_MUTATION = gql`
 
 const SignOut = props => {
   return (
-    <Mutation mutation={ SIGNOUT_MUTATION } refetchQueries={[{query: SIGNEDIN_USER_QUERY}]}>
-      {(signOut, {loading}) => {
-        return <button disabled={ loading } onClick={ async () => { 
+    <Mutation mutation={ SIGNOUT_MUTATION } refetchQueries={ [{ query: SIGNEDIN_USER_QUERY }] }>
+      { (signOut, { loading }) => {
+        return <button disabled={ loading } onClick={ async () => {
           await window.confirm('Are you sure to close your session?');
           await signOut();
-        }}>{props.children}</button>
-      }}
+        } }>{ props.children }</button>
+      } }
     </Mutation>
   )
 }
