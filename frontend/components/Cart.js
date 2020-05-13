@@ -4,6 +4,10 @@ import CartStyles from './styles/CartStyles';
 import Supreme from './styles/Supreme';
 import SickButton from './styles/SickButton';
 import CloseButton from './styles/CloseButton';
+import User from './User';
+import CartItem from './CartItem';
+import calcTotalPrice from '../lib/calcTotalPrice';
+import formatMoney from '../lib/formatMoney';
 
 const CART_STATE_QUERY = gql`
   query CART_STATE_QUERY {
@@ -19,25 +23,32 @@ const CART_STATE_TOGGLE = gql`
 
 const Cart = props => {
   return (
-    <Mutation mutation={ CART_STATE_TOGGLE }>
-      { (toogleCart) => (
-        <Query query={ CART_STATE_QUERY }>
-          { ({ data }) => (
-            <CartStyles open={ data.cartOpen }>
-              <header>
-                <CloseButton onClick={ toogleCart } title="Close">&times;</CloseButton>
-                <Supreme>Your Cart</Supreme>
-                <p>You have X items in your cart</p>
-              </header>
-              <footer>
-                <p>$10.10</p>
-                <SickButton>Checkout</SickButton>
-              </footer>
-            </CartStyles>
+    <User>
+      { ({ cart }) => (
+        <Mutation mutation={ CART_STATE_TOGGLE }>
+          { (toogleCart) => (
+            <Query query={ CART_STATE_QUERY }>
+              { ({ data }) => (
+                <CartStyles open={ data.cartOpen }>
+                  <header>
+                    <CloseButton onClick={ toogleCart } title="Close">&times;</CloseButton>
+                    <Supreme>Your Cart</Supreme>
+                    <p>You have { cart.length } item{ cart.length === 1 ? '' : 's' } in your cart</p>
+                    <ul>
+                      { cart.map(cartItem => <CartItem key={ cartItem.item.id } cartItem={ cartItem } />) }
+                    </ul>
+                  </header>
+                  <footer>
+                    <p>{ formatMoney(calcTotalPrice(cart)) }</p>
+                    <SickButton>Checkout</SickButton>
+                  </footer>
+                </CartStyles>
+              ) }
+            </Query>
           ) }
-        </Query>
+        </Mutation>
       ) }
-    </Mutation>
+    </User>
   )
 }
 

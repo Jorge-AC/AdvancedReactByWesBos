@@ -27,6 +27,7 @@ type User {
   password: String
   email: String
   permissions: [Permission]
+  cart: [CartItem]
 }
 
 type SuccessMessage {

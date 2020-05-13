@@ -9,6 +9,15 @@ const SIGNEDIN_USER_QUERY = gql`
       name
       email
       id
+      cart {
+        quantity
+        item {
+          title
+          id
+          price
+          image
+        }
+      }
     }
   }
 `;
