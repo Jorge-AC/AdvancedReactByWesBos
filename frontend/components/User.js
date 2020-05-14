@@ -10,6 +10,7 @@ const SIGNEDIN_USER_QUERY = gql`
       email
       id
       cart {
+        id
         quantity
         item {
           title

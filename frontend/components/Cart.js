@@ -24,8 +24,10 @@ const CART_STATE_TOGGLE = gql`
 const Cart = props => {
   return (
     <User>
-      { ({ cart }) => (
-        <Mutation mutation={ CART_STATE_TOGGLE }>
+      { (me) => {
+        if (!me) return null;
+        const cart = me.cart;
+        return <Mutation mutation={ CART_STATE_TOGGLE }>
           { (toogleCart) => (
             <Query query={ CART_STATE_QUERY }>
               { ({ data }) => (
@@ -47,7 +49,7 @@ const Cart = props => {
             </Query>
           ) }
         </Mutation>
-      ) }
+      } }
     </User>
   )
 }

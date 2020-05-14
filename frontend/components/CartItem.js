@@ -2,6 +2,7 @@ import { Component } from "react";
 import styled from 'styled-components';
 import formatMoney from '../lib/formatMoney';
 import PropTypes from 'prop-types';
+import RemoveFromCart from './RemoveFromCart';
 
 const ItemStyled = styled.li`
   padding: 1rem 0;
@@ -20,7 +21,7 @@ const ItemStyled = styled.li`
 
 class CartItem extends Component {
   render() {
-    const { quantity, item } = this.props.cartItem;
+    const { quantity, item, id } = this.props.cartItem;
 
     return (
       <ItemStyled>
@@ -35,6 +36,7 @@ class CartItem extends Component {
             </em>
           </p>
         </div>
+        <RemoveFromCart id={ id } />
       </ItemStyled>
     )
   }
