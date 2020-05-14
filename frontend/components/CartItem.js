@@ -22,7 +22,7 @@ const ItemStyled = styled.li`
 class CartItem extends Component {
   render() {
     const { quantity, item, id } = this.props.cartItem;
-
+    if (!item) return <ItemStyled><p>This item has been deleted</p><RemoveFromCart id={ id } /></ItemStyled>
     return (
       <ItemStyled>
         <img width="100px" src={ item.image } alt={ item.title }></img>

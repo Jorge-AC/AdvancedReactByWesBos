@@ -37,7 +37,7 @@ const Cart = props => {
                     <Supreme>Your Cart</Supreme>
                     <p>You have { cart.length } item{ cart.length === 1 ? '' : 's' } in your cart</p>
                     <ul>
-                      { cart.map(cartItem => <CartItem key={ cartItem.item.id } cartItem={ cartItem } />) }
+                      { cart.map(cartItem => <CartItem key={ cartItem.id } cartItem={ cartItem } />) }
                     </ul>
                   </header>
                   <footer>
