@@ -2,6 +2,8 @@ import { Component } from "react";
 import { ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
 import debounce from "lodash.debounce";
+import Downshift, { resetIdCounter } from "downshift";
+import Router from "next/router";
 import { DropDown, DropDownItem, SearchStyles } from './styles/DropDown';
 
 const SEARCH_ITEMS_QUERY = gql`
@@ -36,28 +38,45 @@ class Search extends Component {
   }, 500);
 
   render() {
+    resetIdCounter();
     return (
       <SearchStyles>
-        <div>
-          <ApolloConsumer>
-            { client => (
-              <input type="text" placeholder="Search" onChange={ (e) => {
-                e.persist();
-                this.handleChange(e, client);
-              } } />
-            ) }
-          </ApolloConsumer>
-          <DropDown>
-            { this.state.items.map(item => (<DropDownItem key={ item.id }>
-              <img width="100px" src={ item.image } alt={ item.title } />
-              <p>{ item.title }</p>
-            </DropDownItem>)) }
-          </DropDown>
-        </div>
+        <Downshift itemToString={ (item) => item ? item.title : '' } onChange={ (item) => { Router.push({ pathname: '/item', query: { id: item.id } }) } }>
+          { ({ getInputProps, getItemProps, inputValue, highlightedIndex, isOpen }) => (
+            <div>
+              <ApolloConsumer>
+                { client => (
+                  <input
+                    { ...getInputProps({
+                      type: 'search',
+                      placeholder: 'Search item',
+                      className: this.state.loading ? 'loading' : '',
+                      onChange: (e) => {
+                        e.persist();
+                        this.handleChange(e, client);
+                      }
+                    }) } />
+                ) }
+              </ApolloConsumer>
+              <DropDown>
+                { isOpen && this.state.items.map((item, index) => (
+                  <DropDownItem { ...getItemProps({
+                    key: item.id,
+                    highlighted: index === highlightedIndex,
+                    item
+                  }) }>
+                    <img width="100px" src={ item.image } alt={ item.title } />
+                    <p>{ item.title }</p>
+                  </DropDownItem>
+                )) }
+                { isOpen && !this.state.items.length && <DropDownItem>{ <p>No item found for { inputValue }</p> }</DropDownItem> }
+              </DropDown>
+            </div>
+          ) }
+        </Downshift>
       </SearchStyles>
     )
   }
-
 }
 
 export default Search;
