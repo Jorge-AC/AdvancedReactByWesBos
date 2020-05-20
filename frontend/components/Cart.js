@@ -9,6 +9,7 @@ import User from './User';
 import CartItem from './CartItem';
 import calcTotalPrice from '../lib/calcTotalPrice';
 import formatMoney from '../lib/formatMoney';
+import CartCheckout from './CartCheckout';
 
 const CART_STATE_QUERY = gql`
   query CART_STATE_QUERY {
@@ -45,7 +46,9 @@ const Cart = props => (
           </header>
           <footer>
             <p>{ formatMoney(calcTotalPrice(cart)) }</p>
-            <SickButton>Checkout</SickButton>
+            <CartCheckout>
+              <SickButton>Checkout</SickButton>
+            </CartCheckout>
           </footer>
         </CartStyles>
       )
