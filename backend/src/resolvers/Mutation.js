@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const { promisify } = require('util');
 const { transport, mailTemplate } = require('../sendEmail');
 const { hasPermission } = require('../utils');
+const Stripe = require('../stripe');
 
 const mutations = {
   /*
@@ -247,6 +248,42 @@ const mutations = {
     if (cartItem.user.id !== ctx.request.userId) throw new Error('You are not allowed to perform this action');
 
     return ctx.db.mutation.deleteCartItem({ where: { id: args.id } }, info);
+  },
+
+  async createOrder(parent, args, ctx, info) {
+    const { userId } = ctx.request;
+
+    if (!userId) throw new Error('You must be logged in to perform this action');
+
+    const user = await ctx.db.query.user({
+      where: { id: userId }
+    }, `
+    {
+      id
+      name
+      cart {
+        id
+        quantity
+        item {
+          title
+          description
+          price
+          image
+          largeImage
+        }
+      }
+    }`);
+
+    const reCalcPrice = user.cart.reduce((acc, el) => (!el.item ? acc : acc + (el.quantity * el.item.price)), 0);
+
+    const paymentIntent = await Stripe.charges.create({
+      amount: reCalcPrice,
+      currency: 'USD',
+      description: `User ${ user.name } purchase of ${ reCalcPrice }`,
+      source: args.token
+    });
+
+    console.log(paymentIntent)
   }
 };
 
