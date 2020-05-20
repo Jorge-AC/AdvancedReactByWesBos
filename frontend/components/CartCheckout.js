@@ -3,7 +3,7 @@ import StripeCheckout from "react-stripe-checkout";
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import calcTotalPrice from '../lib/calcTotalPrice';
-import User from './User';
+import User, { SIGNEDIN_USER_QUERY } from './User';
 
 const CREATE_ORDER_MUTATION = gql`
   mutation CREATE_ORDER_MUTATION($token: String!) {
@@ -26,12 +26,12 @@ class CartCheckout extends Component {
     return (
       <User>
         { (me) => (
-          <Mutation mutation={ CREATE_ORDER_MUTATION }>{ (createOrder) => (
+          <Mutation mutation={ CREATE_ORDER_MUTATION } refetchQueries={ [{ query: SIGNEDIN_USER_QUERY }] }>{ (createOrder) => (
             <StripeCheckout
               stripeKey="pk_test_lXqeByKO0oYAe04pQYp3WF4g00gY0vWZgE"
               name="My Own Cart"
               email={ me.email }
-              image={ me.cart[0].item && me.cart[0].item.image }
+              image={ me.cart.length && me.cart[0].item && me.cart[0].item.image }
               description={ `Total items: ${ me.cart.reduce((acc, item) => (acc + item.quantity), 0) }` }
               amount={ calcTotalPrice(me.cart) }
               currency="USD"

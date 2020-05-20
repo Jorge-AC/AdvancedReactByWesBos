@@ -46,9 +46,11 @@ const Cart = props => (
           </header>
           <footer>
             <p>{ formatMoney(calcTotalPrice(cart)) }</p>
-            <CartCheckout>
-              <SickButton>Checkout</SickButton>
-            </CartCheckout>
+            { cart.length && (
+              <CartCheckout>
+                <SickButton>Checkout</SickButton>
+              </CartCheckout>
+            ) }
           </footer>
         </CartStyles>
       )

@@ -251,10 +251,12 @@ const mutations = {
   },
 
   async createOrder(parent, args, ctx, info) {
+    //check if user is logged in
     const { userId } = ctx.request;
 
     if (!userId) throw new Error('You must be logged in to perform this action');
 
+    //query for user's cart
     const user = await ctx.db.query.user({
       where: { id: userId }
     }, `
@@ -274,16 +276,48 @@ const mutations = {
       }
     }`);
 
+    //recalc the price to avoid possible changes
     const reCalcPrice = user.cart.reduce((acc, el) => (!el.item ? acc : acc + (el.quantity * el.item.price)), 0);
 
-    const paymentIntent = await Stripe.charges.create({
+    //charge the credit card passing the received token
+    const charge = await Stripe.charges.create({
       amount: reCalcPrice,
       currency: 'USD',
       description: `User ${ user.name } purchase of ${ reCalcPrice }`,
       source: args.token
-    });
+    }).catch(err => { throw new Error(err) });
 
-    console.log(paymentIntent)
+    //create the orderItems array based on items in cart
+    const orderItems = user.cart.map(cartItem => {
+      const item = {
+        quantity: cartItem.quantity,
+        user: { connect: { id: user.id } },
+        ...cartItem.item
+      }
+
+      delete (item.id);
+
+      return item;
+    })
+
+    //create a new order passing the orderItems
+    const order = await ctx.db.mutation.createOrder({
+      data: {
+        total: reCalcPrice,
+        charge: charge.id,
+        user: { connect: { id: user.id } },
+        items: { create: orderItems }
+      }
+    }).catch(err => { throw new Error(err) });
+
+    //delete items in cart after order created
+    await ctx.db.mutation.deleteManyCartItems({
+      where: {
+        id_in: user.cart.map(item => item.id)
+      }
+    }).catch(err => { throw new Error(err) });
+
+    return order
   }
 };
 
