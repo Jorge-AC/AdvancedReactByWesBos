@@ -21,6 +21,7 @@ type Query {
   itemsConnection: ItemConnection!
   me: User
   usersPermissions: [User]!
+  singleOrder(id: ID!): Order
 }
 
 type User {

@@ -54,4 +54,6 @@ type Order {
   total: Int!
   items: [OrderItem!]!
   charge: String!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }

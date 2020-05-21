@@ -35,6 +35,20 @@ const Query = {
     const users = await ctx.db.query.users({}, info);
 
     return users;
+  },
+  async singleOrder(parent, args, ctx, info) {
+    if (!ctx.request.userId) throw new Error('You must be logged in to perform this action');
+
+    const order = await ctx.db.query.order({
+      where: { id: args.id }
+    }, info).catch(err => { throw new Error(err) });
+
+    const isOwner = order.user.id === ctx.request.userId;
+    const hasPermissions = ctx.request.user.permissions.includes('ADMIN');
+
+    if (!isOwner && !hasPermissions) throw new Error('You can\'t perform this action');
+
+    return order
   }
 };
 
