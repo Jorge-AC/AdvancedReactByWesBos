@@ -49,6 +49,17 @@ const Query = {
     if (!isOwner && !hasPermissions) throw new Error('You can\'t perform this action');
 
     return order
+  },
+
+  async orders(parent, args, ctx, info) {
+    const { userId } = ctx.request;
+
+    if (!userId) throw new Error('You must be logged in to see your orders');
+
+    return ctx.db.query.orders({
+      where: { user: { id: userId } },
+      orderBy: args.orderBy
+    }, info)
   }
 };
 

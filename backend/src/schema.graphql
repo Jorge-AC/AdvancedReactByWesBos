@@ -22,6 +22,7 @@ type Query {
   me: User
   usersPermissions: [User]!
   singleOrder(id: ID!): Order
+  orders(orderBy: OrderOrderByInput): [Order]
 }
 
 type User {
